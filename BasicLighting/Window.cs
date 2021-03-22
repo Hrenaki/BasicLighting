@@ -70,10 +70,6 @@ namespace BasicLighting
 
         Matrix4 view, proj;
         float speed = 0.5f;
-        float pitch = 0.0f;
-        float yaw = 90.0f;
-        float angularSpeed = 1.0f;
-        float start = -90.0f;
 
         Vector3 position = new Vector3(0.0f, 0.0f, 10f);
         Vector3 front = new Vector3(0.0f, 0.0f, -1.0f);
@@ -82,7 +78,8 @@ namespace BasicLighting
 
         Vector3 ambient = new Vector3(.2f, .2f, .2f);
         Vector3 lampColor = new Vector3(1.0f, 1.0f, 1.0f);
-        Vector3 lampPos = new Vector3(0.0f, 0.0f, 5.0f);
+        Vector3 lampPos1 = new Vector3(0.0f, -.5f, 5.0f);
+        Vector3 lampPos2 = new Vector3(0.0f, .5f, 5.0f);
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
         {
@@ -137,7 +134,8 @@ namespace BasicLighting
             shader.SetMatrix4("model", model);
             shader.SetVector3("ambient", ambient);
             shader.SetVector3("lampColor", lampColor);
-            shader.SetVector3("lampPos", position);
+            shader.SetVector3("lampPos", lampPos1);
+            shader.SetVector3("lampPos2", lampPos2);
             shader.SetVector3("viewPos", position);
 
             GL.BindVertexArray(vertexesVAO);
@@ -158,7 +156,7 @@ namespace BasicLighting
         {
             if (!Focused)
                 return;
-            model = Matrix4.CreateFromAxisAngle(Vector3.UnitY, -e.XDelta / 100.0f) * model;
+            model = Matrix4.CreateFromQuaternion(Quaternion.FromAxisAngle(Vector3.UnitX, -e.YDelta / 100.0f)) * model;
             base.OnMouseMove(e);
         }
         protected override void OnKeyDown(KeyboardKeyEventArgs e)
